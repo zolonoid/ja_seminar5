@@ -1,58 +1,75 @@
-import java.util.PrimitiveIterator;
-
 /**
- * task3
+ * test
  */
 public class task3
 {
 
     public static void main(String[] args)
     {
-        // for(int start = 0; start < 64; start++)
-        // {
-        //     int ferzCount = 0;
-        //     var board = new boolean[8][8];
-        //     for(int i = start/8; i < 8; i++)
-        //     {
-        //         for (int j = start%8; j < 8; j++)
-        //         {
-        //             if(board[i][j]) continue;
-        //             if(CheckBeating(new int[] { i,j }, board)) continue;
-        //             board[i][j] = true;
-        //             ferzCount++;
-        //         }
-        //     }
-        //     if(ferzCount < 5) continue;
-        //     PrintBoard(board);
-        //     break;
-        // }
+        F8 d = new F8();
+        d.provM();
+    }
+}
 
-        for(int f1 = 0; f1 < 64; f1++) {
-            for(int f2 = 0; f2 < 64; f2++) {
-                for(int f3 = 0; f3 < 64; f3++) {
-                    for(int f4 = 0; f4 < 64; f4++) {
-                        for(int f5 = 0; f5 < 64; f5++) {
-                            for(int f6 = 0; f6 < 64; f6++) {
-                                for(int f7 = 0; f7 < 64; f7++) {
-                                    for(int f8 = 0; f8 < 64; f8++) {
-                                        var board = new boolean[8][8];
-                                        board[f1 / 8][f1 % 8] = true;
-                                        if(CheckBeating(new int[] { f2 / 8, f2 % 8 }, board)) continue;
-                                        board[f2 / 8][f2 % 8] = true;
-                                        if(CheckBeating(new int[] { f3 / 8, f3 % 8 }, board)) continue;
-                                        board[f3 / 8][f3 % 8] = true;
-                                        if(CheckBeating(new int[] { f4 / 8, f4 % 8 }, board)) continue;
-                                        board[f4 / 8][f4 % 8] = true;
-                                        if(CheckBeating(new int[] { f5 / 8, f5 % 8 }, board)) continue;
-                                        board[f5 / 8][f5 % 8] = true;
-                                        if(CheckBeating(new int[] { f6 / 8, f6 % 8 }, board)) continue;
-                                        board[f6 / 8][f6 % 8] = true;
-                                        if(CheckBeating(new int[] { f7 / 8, f7 % 8 }, board)) continue;
-                                        board[f7 / 8][f7 % 8] = true;
-                                        if(CheckBeating(new int[] { f8 / 8, f8 % 8 }, board)) continue;
-                                        board[f8 / 8][f8 % 8] = true;
-                                        PrintBoard(board);
-                                        return;
+
+class F8 {
+    public byte[] p = new byte[9];
+    public void provP() {
+        boolean b1, b2, b3;
+        for (byte j1 = 1; j1 < 8; j1++)
+            for (byte j2 = (byte) (j1 + 1); j2 <= 8; j2++) {
+                b1 = (p[j1] != p[j2]);
+                b2 = (p[j2] - p[j1]) != (j2 - j1);
+                b3 = (p[j1] + j1) != (p[j2] + j2);
+                if (b1 && b2 && b3)
+                    p[0]++;
+            }
+    }
+
+    public boolean provG() {
+        boolean b = false;
+        for (int i = 1; i <= 8; i++) {
+            if ((i == p[i]) | ((i + p[i]) == 9)) {
+                b = true;
+            }
+            if (b)
+                break;
+        }
+        return b;
+    }
+
+    public void provM() {
+        int count = 0;
+        for (byte j1 = 1; j1 <= 8; j1++) {
+            p[1] = j1;
+            for (byte j2 = 1; j2 <= 8; j2++) {
+                p[2] = j2;
+                for (byte j3 = 1; j3 <= 8; j3++) {
+                    p[3] = j3;
+                    for (byte j4 = 1; j4 <= 8; j4++) {
+                        p[4] = j4;
+                        for (byte j5 = 1; j5 <= 8; j5++) {
+                            p[5] = j5;
+                            for (byte j6 = 1; j6 <= 8; j6++) {
+                                p[6] = j6;
+                                for (byte j7 = 1; j7 <= 8; j7++) {
+                                    p[7] = j7;
+                                    for (byte j8 = 1; j8 <= 8; j8++) {
+                                        p[8] = j8;
+                                        p[0] = 0;
+                                        provP();
+                                        if (p[0] == 28) {
+                                            Boolean b = provG();
+                                            if (!b) {
+                                                count++;
+                                                System.out.printf("%d): ", count);
+                                                var board = new boolean[8][8];
+                                                for (int i = 1; i <= 8; i++)
+                                                    board[i - 1][p[i] - 1] = true;
+                                                System.out.println();
+                                                PrintBoard(board);
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -61,62 +78,10 @@ public class task3
                 }
             }
         }
+        System.out.printf("Всего расстановок - %d", count);
     }
 
-    private static boolean CheckBeating(int[] square, boolean[][] board)
-    {
-        return board[square[0]][square[1]]           ||
-               CheckVerticalBeating(square, board)   ||
-               CheckHorizontalBeating(square, board) ||
-               CheckDiagonalBeating(square, board);
-    }
-
-    private static boolean CheckVerticalBeating(int[] square, boolean[][] board)
-    {
-        for (int i = 0; i < 8; i++)
-        {
-            if(board[square[0]][i])
-                return true;
-        }
-        return false;
-    }
-
-    private static boolean CheckHorizontalBeating(int[] square, boolean[][] board)
-    {
-        for (int i = 0; i < 8; i++)
-        {
-            if(board[i][square[1]])
-                return true;
-        }
-        return false;
-    }
-
-    private static boolean CheckDiagonalBeating(int[] square, boolean[][] board)
-    {
-        for(int i = square[0], j = square[1]; i < 8 && j < 8; i++, j++)
-        {
-                if(board[i][j])
-                    return true;
-        }
-        for(int i = square[0], j = square[1]; i < 8 && j >= 0; i++, j--)
-        {
-                if(board[i][j])
-                    return true;
-        }
-        for(int i = square[0], j = square[1]; i >= 0 && j >= 0; i--, j--)
-        {
-                if(board[i][j])
-                    return true;
-        }
-        for(int i = square[0], j = square[1]; i >= 0 && j < 8; i--, j++)
-        {
-                if(board[i][j])
-                    return true;
-        }
-        return false;
-    }
-
-    private static void PrintBoard(boolean[][] board)
+    private void PrintBoard(boolean[][] board)
     {
         var print = new StringBuilder();
         for(int j = 0; j < 8; j++)
