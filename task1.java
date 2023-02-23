@@ -101,8 +101,9 @@ class PhoneBookCmd
         {
             _sc = new Scanner(System.in, System.console().charset());
             _phoneBook = phoneBook;
-            _commands = new Command[] { new Add(), new Del(), new All(), new Get() };
-            
+            _commands = new Command[] { new Add(), new Del(), new All(), new Get(), new End() };
+            for (int i = 0; i < _commands.length; i++)
+                System.out.printf("%s:\n    %s\n", _commands[i].Description(), _commands[i].Syntax());
             Run();
         }
         finally
@@ -127,6 +128,7 @@ class PhoneBookCmd
                 out = result;
                 break;
             }
+            if(out == "") break;
             System.out.println(out);
         }
     }
@@ -180,6 +182,7 @@ class PhoneBookCmd
         }
         
         public abstract String Syntax();
+        public abstract String Description();
         protected abstract String ProcessCommand() throws IOException;
     }
     
@@ -189,6 +192,11 @@ class PhoneBookCmd
         @Override
         public String Syntax() {
             return "ADD -n имя -t телефон [-t телефон]";
+        }
+        
+        @Override
+        public String Description() {
+            return "Добавить контакт";
         }
         
         @Override
@@ -226,6 +234,11 @@ class PhoneBookCmd
         }
         
         @Override
+        public String Description() {
+            return "Удалить контакт";
+        }
+        
+        @Override
         public String toString() {
             return "DEL";
         }
@@ -257,6 +270,11 @@ class PhoneBookCmd
         }
         
         @Override
+        public String Description() {
+            return "Показать все контакты";
+        }
+        
+        @Override
         public String toString() {
             return "ALL";
         }
@@ -284,6 +302,11 @@ class PhoneBookCmd
         }
         
         @Override
+        public String Description() {
+            return "Получить номер телефона";
+        }
+        
+        @Override
         public String toString() {
             return "GET";
         }
@@ -306,6 +329,34 @@ class PhoneBookCmd
                 return "Контакт не найден.";
             List<String> phoneNumbers = Arrays.asList(contact);
             return String.format("%s  %s", n, String.join(", ", phoneNumbers));
+        }
+    }
+
+
+    // END
+    private class End extends Command
+    {
+        @Override
+        public String Syntax() {
+            return "END";
+        }
+        
+        @Override
+        public String Description() {
+            return "Завершить работу";
+        }
+        
+        @Override
+        public String toString() {
+            return "END";
+        }
+        
+        @Override
+        protected String ProcessCommand()
+        {
+            if(!_command.equalsIgnoreCase("END"))
+                return null;
+            return "";
         }
     }
 }
