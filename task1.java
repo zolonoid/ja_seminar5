@@ -15,16 +15,16 @@ import java.util.regex.Pattern;
  */
 public class task1
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException
     {
-        try
-        {
+        //try
+        //{
             new PhoneBookCmd(new PhoneBook("task1.csv"));
-        }
-        catch (Exception e)
-        {
-            System.out.printf("Ошибка: %s", e.getMessage());
-        }
+        //}
+        //catch (Exception e)
+        //{
+        //    System.out.printf("Ошибка: %s", e.getMessage());
+        //}
     }
 }
 
@@ -63,12 +63,18 @@ class PhoneBook
         return _contacts.get(name);
     }
     
+    public int Count()
+    {
+        return _contacts.size();
+    }
+    
     public void Save() throws IOException
     {
         var contacts = new ArrayList<String>();
         for(var contact : _contacts.entrySet())
         {
-            List<String> phoneNumbers = Arrays.asList(contact.getValue());
+            //List<String> phoneNumbers = Arrays.asList(contact.getValue());
+            ArrayList<String> phoneNumbers = new ArrayList<String>(Arrays.asList(contact.getValue()));
             phoneNumbers.add(0, contact.getKey());
             String csvStr = String.join(";", phoneNumbers);
             contacts.add(csvStr);
@@ -139,7 +145,7 @@ class PhoneBookCmd
             "^([a-zA-Z]+)(?:\\s|$)"
         );
         private static Pattern paramPattern = Pattern.compile(
-            "\\s(-[a-zA-Z]+)\\s(.+?)(?:\\s-[a-zA-Z]+\\s|$)"
+            "(/[a-zA-Z]+)\\s([^/]+)"
         );
         
         protected String _input;
@@ -186,12 +192,12 @@ class PhoneBookCmd
         protected abstract String ProcessCommand() throws IOException;
     }
     
-    // ADD -n имя -t телефон [-t телефон]
+    // ADD /n имя /t телефон [/t телефон]
     private class Add extends Command
     {
         @Override
         public String Syntax() {
-            return "ADD -n имя -t телефон [-t телефон]";
+            return "ADD /n имя /t телефон [/t телефон]";
         }
         
         @Override
@@ -209,13 +215,13 @@ class PhoneBookCmd
         {
             if(!_command.equalsIgnoreCase("ADD"))
                 return null;
-            ArrayList<String> n = _params.get("-n");
+            ArrayList<String> n = _params.get("/n");
             if(n == null)
                 return SyntaxError();
-            ArrayList<String> t = _params.get("-t");
+            ArrayList<String> t = _params.get("/t");
             if(t == null)
                 return SyntaxError();
-            return Success(n.get(0), (String[])t.toArray());
+            return Success(n.get(0), t.toArray(new String[0]));
         }
 
         private String Success(String n, String[] t) throws IOException
@@ -225,12 +231,12 @@ class PhoneBookCmd
         }
     }
     
-    // DEL -n имя
+    // DEL /n имя
     private class Del extends Command
     {
         @Override
         public String Syntax() {
-            return "DEL -n имя";
+            return "DEL /n имя";
         }
         
         @Override
@@ -248,7 +254,7 @@ class PhoneBookCmd
         {
             if(!_command.equalsIgnoreCase("DEL"))
                 return null;
-            ArrayList<String> n = _params.get("-n");
+            ArrayList<String> n = _params.get("/n");
             if(n == null)
                 return SyntaxError();
             return Success(n.get(0));
@@ -289,16 +295,18 @@ class PhoneBookCmd
         
         private String Success()
         {
-            return _phoneBook.toString();
+            if(_phoneBook.Count() > 0)
+                return _phoneBook.toString();
+            return "Список контактов пуст.";
         }
     }
     
-    // GET -n имя
+    // GET /n имя
     private class Get extends Command
     {
         @Override
         public String Syntax() {
-            return "GET -n имя";
+            return "GET /n имя";
         }
         
         @Override
@@ -316,7 +324,7 @@ class PhoneBookCmd
         {
             if(!_command.equalsIgnoreCase("GET"))
                 return null;
-            ArrayList<String> n = _params.get("-n");
+            ArrayList<String> n = _params.get("/n");
             if(n == null)
                 return SyntaxError();
             return Success(n.get(0));
