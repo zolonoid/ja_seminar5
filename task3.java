@@ -8,29 +8,65 @@ public class task3
 
     public static void main(String[] args)
     {
-        for(int start = 0; start < 64; start++)
-        {
-            int ferzCount = 0;
-            var board = new boolean[8][8];
-            for(int i = start/8; i < 8; i++)
-            {
-                for (int j = start%8; j < 8; j++)
-                {
-                    if(board[i][j]) continue;
-                    if(CheckBeating(new int[] { i,j }, board)) continue;
-                    board[i][j] = true;
-                    ferzCount++;
+        // for(int start = 0; start < 64; start++)
+        // {
+        //     int ferzCount = 0;
+        //     var board = new boolean[8][8];
+        //     for(int i = start/8; i < 8; i++)
+        //     {
+        //         for (int j = start%8; j < 8; j++)
+        //         {
+        //             if(board[i][j]) continue;
+        //             if(CheckBeating(new int[] { i,j }, board)) continue;
+        //             board[i][j] = true;
+        //             ferzCount++;
+        //         }
+        //     }
+        //     if(ferzCount < 5) continue;
+        //     PrintBoard(board);
+        //     break;
+        // }
+
+        for(int f1 = 0; f1 < 64; f1++) {
+            for(int f2 = 0; f2 < 64; f2++) {
+                for(int f3 = 0; f3 < 64; f3++) {
+                    for(int f4 = 0; f4 < 64; f4++) {
+                        for(int f5 = 0; f5 < 64; f5++) {
+                            for(int f6 = 0; f6 < 64; f6++) {
+                                for(int f7 = 0; f7 < 64; f7++) {
+                                    for(int f8 = 0; f8 < 64; f8++) {
+                                        var board = new boolean[8][8];
+                                        board[f1 / 8][f1 % 8] = true;
+                                        if(CheckBeating(new int[] { f2 / 8, f2 % 8 }, board)) continue;
+                                        board[f2 / 8][f2 % 8] = true;
+                                        if(CheckBeating(new int[] { f3 / 8, f3 % 8 }, board)) continue;
+                                        board[f3 / 8][f3 % 8] = true;
+                                        if(CheckBeating(new int[] { f4 / 8, f4 % 8 }, board)) continue;
+                                        board[f4 / 8][f4 % 8] = true;
+                                        if(CheckBeating(new int[] { f5 / 8, f5 % 8 }, board)) continue;
+                                        board[f5 / 8][f5 % 8] = true;
+                                        if(CheckBeating(new int[] { f6 / 8, f6 % 8 }, board)) continue;
+                                        board[f6 / 8][f6 % 8] = true;
+                                        if(CheckBeating(new int[] { f7 / 8, f7 % 8 }, board)) continue;
+                                        board[f7 / 8][f7 % 8] = true;
+                                        if(CheckBeating(new int[] { f8 / 8, f8 % 8 }, board)) continue;
+                                        board[f8 / 8][f8 % 8] = true;
+                                        PrintBoard(board);
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            if(ferzCount < 5) continue;
-            PrintBoard(board);
-            break;
         }
     }
 
     private static boolean CheckBeating(int[] square, boolean[][] board)
     {
-        return CheckVerticalBeating(square, board)   ||
+        return board[square[0]][square[1]]           ||
+               CheckVerticalBeating(square, board)   ||
                CheckHorizontalBeating(square, board) ||
                CheckDiagonalBeating(square, board);
     }
